@@ -1,50 +1,54 @@
+##******************************************************************************
+## Fractal 2: Floco de Neve
+## Grupo 4 (Maria Fernanda, Rebeca Freitas, Thiago Lopes Chaves) 
+
 import turtle as t
 import tkinter as tk
 from tkinter import simpledialog
+import random
 
-#essa função é chamava para decompor cada lado do triangulo equilatero
-def floco_de_neve(lado, nivel):
-    # Condição de parada: quando o nível se iguala a zero, movemos a tartaruga para o início.
+colors = ['yellow', 'orange', 'pink', 'green', 'blue', 'red', 'violet']
+
+#Essa função é responsável por desenhar recursivamente a curva de koch, a cada vez que o nível é decrementado
+def desenha_sub_triangulo(nivel, lado):
     if nivel == 0:
         t.forward(lado)
     else:
-        # Dividimos o lado em três partes.
-        lado /= 3
-        # Decrementados os níveis
-        nivel -= 1
-        # Primeira chamada recursiva que desenha o primeiro segmento  do floco.
-        floco_de_neve(lado, nivel)
-        t.left(60)
-        # Segunda chamada recursiva para desenhar outro segmento do floco.
-        floco_de_neve(lado, nivel)
-        t.right(120)
-        # Terceira chamada recursiva para desenhar o último segmento do floco.
-        floco_de_neve(lado, nivel)
-        t.left(60)
-        # Quarta chamada recursiva para completar o desenho do floco.
-        floco_de_neve(lado, nivel)
-
+        for angulo in [60, -120, 60, 0]:
+            desenha_sub_triangulo(nivel - 1, lado / 3)
+            t.left(angulo)
+            
 def main():
+    i = 1
     window = tk.Tk()
     window.withdraw() 
     lado = simpledialog.askinteger("Tamanho do lado", "Informe o tamanho do lado do triângulo:")
-    
     n = simpledialog.askinteger("Níveis", "Digite quantos níveis deseja:")
-
     window.destroy() 
-
     window = t.Screen()
     t.speed(0)
+    t.colormode(255)
     t.penup()
     t.pendown()
     t.shape("turtle")
-    t.color("blue")
-
-    for _ in range(3):
-        # Desenha o floco de neve para cada um dos três lados de um triângulo equilátero.
-        floco_de_neve(lado, n)
-        t.right(120)
+    t.pensize(3)
+    # Itera por cada lado do triângulo, fazendo uma curva à esquerda para cada um dos ângulos e iniciando a construção dos subtriângulos.
+    while i<=3:
+        t.color(random.choice(colors),random.choice(colors) )
+        for angulo in [60, 240, 240]:
+            t.left(angulo)
+            desenha_sub_triangulo(n, lado)
+            i += 1
 
     window.exitonclick()
 
 main()
+
+#################################################################################
+## REFERÊNCIAS -----------------------------------------------------------------
+#################################################################################
+## https://vegibit.com/change-pen-color-in-python-turtle/
+## [Fractal floco de neve de Koch] https://www.youtube.com/watch?v=7iFy7KRaLQ8&t=302s
+## [Percorrendo a Curva de Koch] https://docs.ufpr.br/~ewkaras/ensino/fractais/Koch.pdf
+## [A Curva de Koch (Fractal Floco de Neve)] https://www.batebyte.pr.gov.br/Pagina/Curva-de-Koch-Fractal-Floco-de-Neve
+## ******************************************************************************
